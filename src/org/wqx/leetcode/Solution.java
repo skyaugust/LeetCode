@@ -881,6 +881,26 @@ public class Solution {
 	        
 	        return maxProduct;
 	    }
+	    /**
+	     * Given n, how many structurally unique BST's (binary search trees) that store values 1...n?
+	     * @param n
+	     * @return
+	     */
+	    public int numTrees(int n) {
+	    	//Catalan number Problem
+	        //if n == 1 return 1
+	        if(n <= 1) return 1;
+	        int[] s = new int[n+1];
+	        s[0]=s[1]=1;
+	        for(int i = 2; i < n+1; i++){
+	            s[i]=0;
+	            for(int j = 0; j < i; j++){
+	                s[i] = s[i] + s[j] * s[i-j-1];
+	            }
+	        }
+	        return s[n];
+	        
+	    }
 	 public static void printArray(int []array){
 		 System.out.println(Arrays.toString(array));
 	 }
@@ -945,7 +965,7 @@ public class Solution {
 //		System.out.println(s.minimumTotal2(new Integer[][]{{2},{3,4},{6,5,7},{4,1,8,3}}));
 //		System.out.println(s.minimumTotal2(new Integer[][]{{1},{2,3}}));
 //		System.out.println(s.uniquePaths(3, 7));
-		System.out.println(s.uniquePathsWithObstacles(new int[][]{{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0}}));
+		//System.out.println(s.uniquePathsWithObstacles(new int[][]{{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0}}));
 //		System.out.println(s.uniquePathsWithObstacles(new int[][]{{0,0,1,0},{0,0,0,0},{0,0,0,0}}));
 //		System.out.println(s.uniquePathsWithObstacles(new int[][]{{1,0}}));
 //		System.out.println(s.maxProduct(new int[]{2,3,-2,4}));
@@ -953,7 +973,11 @@ public class Solution {
 //		System.out.println(s.maxProduct(new int[]{2,-2,-2,4}));
 //		System.out.println(s.maxProduct(new int[]{0,2,3,-2,4}));
 //		System.out.println(s.maxProduct(new int[]{-2,3,-4}));
-
+		System.out.println(s.numTrees(0));
+		System.out.println(s.numTrees(1));
+		System.out.println(s.numTrees(2));
+		System.out.println(s.numTrees(3));
+		System.out.println(s.numTrees(4));
 	}
 
 }
