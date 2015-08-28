@@ -36,7 +36,7 @@ id        | return value  | method name | Question | hint |
 26	|	 int	|	minPathSum1(int[][] grid) 
 27	|	 int	|	minPathSum2(int[][] grid) 
 28	|	 int	|	nextMonotonyInterval(int[] nums, int start) 
-29	|	 int	|	numTrees(int n) 
+29	|	 int	|	numTrees(int n) | [Unique Binary Search Trees ](https://leetcode.com/problems/unique-binary-search-trees/) | Catalan number, dp
 30	|	 int	|	partition(int[] nums, int start, int color) 
 31	|	static int[]	|	plusOne(int[] digits) 
 32	|	static int[]	|	plusOne2(int[] digits) 
