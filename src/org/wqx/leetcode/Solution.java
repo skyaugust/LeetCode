@@ -901,6 +901,101 @@ public class Solution {
 	        return s[n];
 	        
 	    }
+	    /**
+	     * You are given two linked lists representing two non-negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. 
+	     * <p>Add the two numbers and return it as a linked list.
+	     * <p>Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+	     * <p>Output: 7 -> 0 -> 8
+	     * @param l1
+	     * @param l2
+	     * @return
+	     */
+	    
+	    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+	        if (l1==null) return l2;
+	        if (l2==null) return l1;
+	        ListNode result = l1;
+	        int val = 0, c = 0;
+	        ListNode pre1=null,pre2=null;
+	        //1. add two list on l1, until one of them has no elment
+	        while(l1!=null && l2!=null){
+	            val = (l1.val + l2.val + c) % 10;
+	            c = (l1.val + l2.val + c) / 10;
+	            l1.val = val;
+	            pre1 = l1;
+	            pre2 = l2;
+	            l1 = l1.next;
+	            l2 = l2.next;
+	        }
+	        
+	        //2. add the remaing list 
+	        
+	       if(pre1.next == null){
+	           pre1.next = pre2.next;
+	       }
+	        while(pre1.next!=null){
+	            val = (pre1.next.val + c) % 10;
+	            c = (pre1.next.val  + c) / 10;
+	            pre1.next.val = val;
+	            pre1 = pre1.next;
+	        }
+	        //3.add the carry if exist
+	        if (c > 0){
+	            ListNode n = new ListNode(c);
+	            pre1.next = n;
+	            n.next=null;
+	        }
+	        return result;
+	    }
+	    
+	    /**
+	     * Write a function to delete a node (except the tail) in a singly linked list, given only access to that node.
+	     * <p>Supposed the linked list is 1 -> 2 -> 3 -> 4 and you are given the third node with value 3, the linked list should become 1 -> 2 -> 4 after calling your function.
+	     * @param node
+	     */
+	    public void deleteNode(ListNode node) {
+	        if(node == null) return;
+	        if(node.next==null) {
+	            return;
+	        }else{
+	            node.val = node.next.val;
+	            ListNode n2d = node.next;
+	            node.next=node.next.next;
+	            n2d=null;
+	            return;
+	        }
+
+	    }
+	    
+	    /**
+	     * Sort a linked list using insertion sort.
+	     * @param head
+	     * @return
+	     */
+	    public ListNode insertionSortList(ListNode head) {
+	        ListNode dummy = new ListNode(Integer.MIN_VALUE);
+	        ListNode cur = dummy;
+	        //for each node in headlist, insert it into the dummy list
+	        while(head!=null){ 
+	            while(cur.next!=null){
+	                if(cur.next.val > head.val){
+	                    break;
+	                }else{
+	                    cur = cur.next;
+	                }
+	            }
+	            //insert head to cur.next
+	            ListNode next = head.next;
+	            head.next = cur.next;
+	            cur.next = head;
+	            head = next;
+	            
+	            //cur goes back to dummy head;
+	            cur = dummy;
+	        }
+	        return dummy.next;
+	    }
 	 public static void printArray(int []array){
 		 System.out.println(Arrays.toString(array));
 	 }
