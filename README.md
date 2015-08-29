@@ -59,3 +59,6 @@ id        | return value  | method name | Question | hint |
 49	|	 int[]	|	twoSum2(int[] nums, int target) 
 50	|	 int	|	uniquePaths(int m, int n) 
 51	|	 int	|	uniquePathsWithObstacles(int[][] obstacleGrid) 
+52  |  ListNode | addTwoNumbers(ListNode l1, ListNode l2) | [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) 
+53  |  void | deleteNode(ListNode node) | [Delete Node in a Linked List](https://leetcode.com/problems/delete-node-in-a-linked-list/)
+54 | ListNode | insertionSortList(ListNode head) | [Insertion Sort List](https://leetcode.com/problems/insertion-sort-list/)
