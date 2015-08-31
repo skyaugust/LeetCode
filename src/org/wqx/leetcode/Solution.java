@@ -27,12 +27,167 @@ class ListNode{
 		this.val = val;
 	}
 }
+
 /**
  * Solution contains my solutions for <a href = "http://www.leetcode.com">leetcode</a>'s problems.
  * @author wanqiangxin
  *
  */
 public class Solution {
+	/**
+	 * 
+	 * @param headA
+	 * @param headB
+	 * @return
+	 */
+	public ListNode getIntersectionNode2(ListNode headA, ListNode headB) {
+        ListNode dummyL = new ListNode(0);
+        ListNode dummyS = new ListNode(0);
+        int lenA = getLength(headA);
+        int lenB = getLength(headB);
+        dummyL.next = lenA >= lenB ? headA : headB;
+        dummyS.next = lenA >= lenB ? headB : headA;
+        headA = dummyL;
+        headB = dummyS;
+        int step=0;
+        while(step < Math.abs(lenA-lenB)){
+            headA=headA.next;
+            step++;
+        }
+        while(headA!=null && headB!=null){
+            if(headA.next == headB.next){
+                if (headA.next == null){ return null;}
+                else return headA.next;
+            }else{
+                headA = headA.next;
+                headB = headB.next;
+            }
+        }
+        return null;
+        
+    }
+        public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+            //1.If one of them is null, they would have no intersection
+            if(headA == null || headB == null) return null;
+            
+            //2.Get the lenth
+            int lenA = getLength(headA);
+            int lenB = getLength(headB);
+            
+            //3.Move the longer one by |lenA - lenB| steps
+            int step = 0;
+            while(step < Math.abs(lenA - lenB)){
+                if (lenA > lenB) headA = headA.next;
+                else headB = headB.next;
+                step++;
+            }
+            
+            //4.Move togther until they are intersecting
+            while(headA != headB){
+                headA = headA.next;
+                headB = headB.next;
+            }
+            return headA!=null?headA:null;
+    }
+    public int getLength(ListNode head){
+        int count = 0;
+        while(head!=null){
+            count++;
+            head=head.next;
+        }
+        return count;
+    }
+	/**
+	 * Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+	 * @param head
+	 * @return
+	 */
+	public ListNode detectCycle2(ListNode head) {
+        //1.find the node where the quick and slow meet.
+        
+        ListNode quick = head,slow = head;
+        if (head==null) return null;
+        while(slow !=null && quick !=null){
+            slow = slow.next;
+            quick = quick.next;
+            if(quick==null) return null;
+            else quick = quick.next;
+            //There is cycle
+            if(slow ==quick) break;
+        }
+        if(slow == null || quick == null) return null;
+        //2.Now we get the node where quick and slow meet.
+        //  This meetnode must be in cycle.
+        //  find the intersection of headlist and meetnode
+        
+        int len_head=0;
+        ListNode cur_head = head;
+        while(cur_head!=null && cur_head.next!=slow){
+            cur_head=cur_head.next;
+            len_head ++;
+        }
+        if (cur_head == null) return null;
+        
+        int len_meet=0;
+        ListNode cur_meet = slow;
+        while(cur_meet!=null && cur_meet.next!=slow){
+            cur_meet=cur_meet.next;
+            len_meet ++;
+        }
+        if (cur_meet == null) return null;
+        
+        int step = 0;
+        while(step < Math.abs(len_head-len_meet)){
+            if(len_head > len_meet){
+                head=head.next;
+            }else{
+                slow=slow.next;
+            }
+            step ++;
+        }
+        while(slow!=head){
+            head = head.next;
+            slow = slow.next;
+        }
+        if (slow == head) return head;
+        else return null;
+        
+        
+    }
+    
+	/**
+	 * Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+	 * 
+	 * @param head
+	 * @return
+	 */
+     public ListNode detectCycle(ListNode head) {
+        //1.find the node where the quick and slow meet.
+        
+        ListNode quick = head,slow = head;
+        if (head==null) return null;
+        while(quick !=null && quick.next!=null){
+            slow = slow.next;
+            quick = quick.next.next;
+            //There is cycle
+            if(slow ==quick) break;
+        }
+        if(quick == null || quick.next == null) return null;
+        //2.Set x : nodes num out cycle
+        //      N : node num in cycle
+        //      k : k-th node from cycle 's first node
+        //  Then: x = m*N - k
+        quick = head;
+        while(quick!=slow){
+            quick=quick.next;
+            slow=slow.next;
+        }
+        
+        return quick;
+        
+        
+        
+    }
 	 public ListNode reverse(ListNode head){
 		 ListNode pre = null, next = null;
 		 while(head != null){
@@ -900,6 +1055,101 @@ public class Solution {
 	        }
 	        return s[n];
 	        
+	    }
+	    /**
+	     * You are given two linked lists representing two non-negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. 
+	     * <p>Add the two numbers and return it as a linked list.
+	     * <p>Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+	     * <p>Output: 7 -> 0 -> 8
+	     * @param l1
+	     * @param l2
+	     * @return
+	     */
+	    
+	    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+	        if (l1==null) return l2;
+	        if (l2==null) return l1;
+	        ListNode result = l1;
+	        int val = 0, c = 0;
+	        ListNode pre1=null,pre2=null;
+	        //1. add two list on l1, until one of them has no elment
+	        while(l1!=null && l2!=null){
+	            val = (l1.val + l2.val + c) % 10;
+	            c = (l1.val + l2.val + c) / 10;
+	            l1.val = val;
+	            pre1 = l1;
+	            pre2 = l2;
+	            l1 = l1.next;
+	            l2 = l2.next;
+	        }
+	        
+	        //2. add the remaing list 
+	        
+	       if(pre1.next == null){
+	           pre1.next = pre2.next;
+	       }
+	        while(pre1.next!=null){
+	            val = (pre1.next.val + c) % 10;
+	            c = (pre1.next.val  + c) / 10;
+	            pre1.next.val = val;
+	            pre1 = pre1.next;
+	        }
+	        //3.add the carry if exist
+	        if (c > 0){
+	            ListNode n = new ListNode(c);
+	            pre1.next = n;
+	            n.next=null;
+	        }
+	        return result;
+	    }
+	    
+	    /**
+	     * Write a function to delete a node (except the tail) in a singly linked list, given only access to that node.
+	     * <p>Supposed the linked list is 1 -> 2 -> 3 -> 4 and you are given the third node with value 3, the linked list should become 1 -> 2 -> 4 after calling your function.
+	     * @param node
+	     */
+	    public void deleteNode(ListNode node) {
+	        if(node == null) return;
+	        if(node.next==null) {
+	            return;
+	        }else{
+	            node.val = node.next.val;
+	            ListNode n2d = node.next;
+	            node.next=node.next.next;
+	            n2d=null;
+	            return;
+	        }
+
+	    }
+	    
+	    /**
+	     * Sort a linked list using insertion sort.
+	     * @param head
+	     * @return
+	     */
+	    public ListNode insertionSortList(ListNode head) {
+	        ListNode dummy = new ListNode(Integer.MIN_VALUE);
+	        ListNode cur = dummy;
+	        //for each node in headlist, insert it into the dummy list
+	        while(head!=null){ 
+	            while(cur.next!=null){
+	                if(cur.next.val > head.val){
+	                    break;
+	                }else{
+	                    cur = cur.next;
+	                }
+	            }
+	            //insert head to cur.next
+	            ListNode next = head.next;
+	            head.next = cur.next;
+	            cur.next = head;
+	            head = next;
+	            
+	            //cur goes back to dummy head;
+	            cur = dummy;
+	        }
+	        return dummy.next;
 	    }
 	 public static void printArray(int []array){
 		 System.out.println(Arrays.toString(array));
