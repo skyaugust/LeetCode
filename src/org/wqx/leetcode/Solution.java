@@ -27,12 +27,167 @@ class ListNode{
 		this.val = val;
 	}
 }
+
 /**
  * Solution contains my solutions for <a href = "http://www.leetcode.com">leetcode</a>'s problems.
  * @author wanqiangxin
  *
  */
 public class Solution {
+	/**
+	 * 
+	 * @param headA
+	 * @param headB
+	 * @return
+	 */
+	public ListNode getIntersectionNode2(ListNode headA, ListNode headB) {
+        ListNode dummyL = new ListNode(0);
+        ListNode dummyS = new ListNode(0);
+        int lenA = getLength(headA);
+        int lenB = getLength(headB);
+        dummyL.next = lenA >= lenB ? headA : headB;
+        dummyS.next = lenA >= lenB ? headB : headA;
+        headA = dummyL;
+        headB = dummyS;
+        int step=0;
+        while(step < Math.abs(lenA-lenB)){
+            headA=headA.next;
+            step++;
+        }
+        while(headA!=null && headB!=null){
+            if(headA.next == headB.next){
+                if (headA.next == null){ return null;}
+                else return headA.next;
+            }else{
+                headA = headA.next;
+                headB = headB.next;
+            }
+        }
+        return null;
+        
+    }
+        public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+            //1.If one of them is null, they would have no intersection
+            if(headA == null || headB == null) return null;
+            
+            //2.Get the lenth
+            int lenA = getLength(headA);
+            int lenB = getLength(headB);
+            
+            //3.Move the longer one by |lenA - lenB| steps
+            int step = 0;
+            while(step < Math.abs(lenA - lenB)){
+                if (lenA > lenB) headA = headA.next;
+                else headB = headB.next;
+                step++;
+            }
+            
+            //4.Move togther until they are intersecting
+            while(headA != headB){
+                headA = headA.next;
+                headB = headB.next;
+            }
+            return headA!=null?headA:null;
+    }
+    public int getLength(ListNode head){
+        int count = 0;
+        while(head!=null){
+            count++;
+            head=head.next;
+        }
+        return count;
+    }
+	/**
+	 * Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+	 * @param head
+	 * @return
+	 */
+	public ListNode detectCycle2(ListNode head) {
+        //1.find the node where the quick and slow meet.
+        
+        ListNode quick = head,slow = head;
+        if (head==null) return null;
+        while(slow !=null && quick !=null){
+            slow = slow.next;
+            quick = quick.next;
+            if(quick==null) return null;
+            else quick = quick.next;
+            //There is cycle
+            if(slow ==quick) break;
+        }
+        if(slow == null || quick == null) return null;
+        //2.Now we get the node where quick and slow meet.
+        //  This meetnode must be in cycle.
+        //  find the intersection of headlist and meetnode
+        
+        int len_head=0;
+        ListNode cur_head = head;
+        while(cur_head!=null && cur_head.next!=slow){
+            cur_head=cur_head.next;
+            len_head ++;
+        }
+        if (cur_head == null) return null;
+        
+        int len_meet=0;
+        ListNode cur_meet = slow;
+        while(cur_meet!=null && cur_meet.next!=slow){
+            cur_meet=cur_meet.next;
+            len_meet ++;
+        }
+        if (cur_meet == null) return null;
+        
+        int step = 0;
+        while(step < Math.abs(len_head-len_meet)){
+            if(len_head > len_meet){
+                head=head.next;
+            }else{
+                slow=slow.next;
+            }
+            step ++;
+        }
+        while(slow!=head){
+            head = head.next;
+            slow = slow.next;
+        }
+        if (slow == head) return head;
+        else return null;
+        
+        
+    }
+    
+	/**
+	 * Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+	 * 
+	 * @param head
+	 * @return
+	 */
+     public ListNode detectCycle(ListNode head) {
+        //1.find the node where the quick and slow meet.
+        
+        ListNode quick = head,slow = head;
+        if (head==null) return null;
+        while(quick !=null && quick.next!=null){
+            slow = slow.next;
+            quick = quick.next.next;
+            //There is cycle
+            if(slow ==quick) break;
+        }
+        if(quick == null || quick.next == null) return null;
+        //2.Set x : nodes num out cycle
+        //      N : node num in cycle
+        //      k : k-th node from cycle 's first node
+        //  Then: x = m*N - k
+        quick = head;
+        while(quick!=slow){
+            quick=quick.next;
+            slow=slow.next;
+        }
+        
+        return quick;
+        
+        
+        
+    }
 	 public ListNode reverse(ListNode head){
 		 ListNode pre = null, next = null;
 		 while(head != null){
