@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -1151,8 +1152,121 @@ public class Solution {
 	        }
 	        return dummy.next;
 	    }
+	    /**
+	     * Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+	     * For example, given
+	     *    s = "leetcode",
+	     *    dict = ["leet", "code"].
+	     *    Return true because "leetcode" can be segmented as "leet code".
+	     *    
+	     * Solution1：Divide and conque
+	     * @param s
+	     * @param wordDict
+	     * @return
+	     */
+	    public boolean wordBreak(String s, Set<String> wordDict) {
+	        if(s.length() < 1) return false;
+	        else {
+				return IsBrokenable(s, wordDict);
+			}
+	    }
+	    public boolean IsBrokenable(String s, Set<String> wordDict) {
+	    	int len  = s.length();
+	    	for (int i = 0; i < s.length(); i++) {
+				//for each i, break s into two parts s[0:i] and s[i+1,len-1]
+	    		if(i == len - 1){
+	    			//the s[i+1,len-1] part is null
+	    			return wordDict.contains(s);
+	    		}else{
+	    			//for each position i, we split s into two parts, left and right .
+	    			boolean leftIn = wordDict.contains(s.substring(0, i+1));
+	    			boolean rightIn = wordDict.contains(s.substring(i+1, len));
+	    			System.out.print(s.substring(0, i+1));
+	    			System.out.println(" "+s.substring(i+1, len));
+	    			
+	    			if( leftIn && rightIn){
+	    				//left and right both could be broken, so s should be broken.
+	    				return true;
+	    			}else if (leftIn && !rightIn) {
+	    				//only left can be broken,there are two conditions:
+	    				//	1.the right can be broken  				
+	    				if(IsBrokenable(s.substring(i+1, len), wordDict)) return true;
+	    				//  2.the right can not be broken, so we check next position
+	    				else continue;
+					}else if (!leftIn && rightIn) {
+						//check next position
+						continue;
+					}else {//if (!leftIn && !rightIn)
+						//check next position
+						continue;
+					}
+	    		}
+			}
+			return false;
+	    }
+	    
+	    /**
+	     * Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+	     * For example, given
+	     *    s = "leetcode",
+	     *    dict = ["leet", "code"].
+	     *    Return true because "leetcode" can be segmented as "leet code".
+	     *    
+	     * Solution1：DP
+	     * @param s
+	     * @param wordDict
+	     * @return
+	     */
+	    public boolean wordBreak2(String s, Set<String> wordDict) {
+	    	if(s.length() == 0) return false;
+	        int [] dp = new int[s.length()];
+	        if(wordDict.contains(String.valueOf(s.charAt(0)))) dp[0] = 1;
+	        for (int i = 1; i < dp.length; i++) {
+				int j = i - 1;
+				while(j>=0){
+					if(wordDict.contains(s.substring(0, i+1)) || dp[j]==1 && wordDict.contains(s.substring(j+1, i+1))){
+
+						dp[i] = 1;
+						break;
+					}else{
+						j --;
+					}
+				}
+			}//end-for
+	        return dp[s.length() - 1] == 1;
+	        
+	    }
+	    public boolean InTable(String s){
+	    	int i = Integer.valueOf(s) ;
+	    	if(i >=1 && i<=26) return true;
+	    	else return false;
+	    }
+
+	    /*	    public int numDecodings(String s) {
+	        if(s.length() == 0) return 0;
+	        int dp[][] = new int[s.length()][s.length()];
+	        for(int i = 0; i < dp.length; i++){
+	        	dp[i][i] = InTable(s.substring(i,i+1)) ? 1 : 0;
+	        }
+	        printArrays(dp);
+	        for(int len = 1; len < dp.length; len++){
+	        	for(int i = 0, j = i+len; j < dp.length; i++, j++){
+	        		dp[i][j] = dp[i+1][j]*dp[i][j-1] +(InTable(s.substring(i,j+1)) ? 1 : 0);
+	        		System.out.println(i+" "+j);
+	        	}
+	        	printArrays(dp);
+	        }
+	        return dp[0][dp.length - 1];
+	    }*/
 	 public static void printArray(int []array){
 		 System.out.println(Arrays.toString(array));
+	 }
+	 public static void printArrays(int [][]arrays){
+		 for (int[] is : arrays)
+			 System.out.println(Arrays.toString(is));
+		 System.out.println();
+	
+		 
 	 }
 	 public static void main(String[] args) {
 		 int[] a = {1};
@@ -1223,11 +1337,26 @@ public class Solution {
 //		System.out.println(s.maxProduct(new int[]{2,-2,-2,4}));
 //		System.out.println(s.maxProduct(new int[]{0,2,3,-2,4}));
 //		System.out.println(s.maxProduct(new int[]{-2,3,-4}));
-		System.out.println(s.numTrees(0));
-		System.out.println(s.numTrees(1));
-		System.out.println(s.numTrees(2));
-		System.out.println(s.numTrees(3));
-		System.out.println(s.numTrees(4));
+//		System.out.println(s.numTrees(0));
+//		System.out.println(s.numTrees(1));
+//		System.out.println(s.numTrees(2));
+//		System.out.println(s.numTrees(3));
+//		System.out.println(s.numTrees(4));
+//		Set<String> dic = new HashSet<String>();
+//		"goalspecial", ["go","goal","goals","special"]
+//		dic.add("go");
+//		dic.add("goal");
+//		dic.add("goals");
+//		dic.add("special");
+//		Set<String> dic2 = new HashSet<String>();
+//		dic2.add("a");
+//		
+//		System.out.println(s.wordBreak2("gogoalspecialgospecialgoalsspecial", dic));
+		 System.out.println(s.numDecodings("12"));
+
 	}
 
+	
+
 }
+
