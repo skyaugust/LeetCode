@@ -7,6 +7,9 @@ Search the solution in
 
 id        | return value  | method name | Question | hint |
 ------------- | ------------- |-------------|----------|------
+39  |boolean   |wordBreak2(String s, Set<String> wordDict)|[Word break](https://leetcode.com/problems/word-break/)|Dp solution
+38  | boolean  |wordBreak(String s, Set<String> wordDict)|[Word break](https://leetcode.com/problems/word-break/)|Recurse solution with IsBrokenable help
+-   | boolean  | IsBrokenable(String s, Set<String> wordDict) | called by 38-word break
 37  | ListNode |detectCycleII(ListNode head)|[Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/) |locate the intersection point using math trick
 37  | ListNode |detectCycleII2(ListNode head)|[Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)| locate the intersection point by cutting off the circle
 36  | ListNode |getIntersectionNode(ListNode headA, ListNode headB)|[Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/) | Quick-slow pointers. Other's pretty solution
