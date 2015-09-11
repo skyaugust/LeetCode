@@ -1258,6 +1258,47 @@ public class Solution {
 	        }
 	        return dp[0][dp.length - 1];
 	    }*/
+	    
+	 /**
+	  * Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
+	  * <pre>
+	  *    <li>Integers in each row are sorted from left to right.
+	  *    <li>The first integer of each row is greater than the last integer of the previous row.
+	  * </pre>
+	  *For example,<br>
+	  *<pre>
+	  *   Consider the following matrix: 
+	  *   [
+	  *     [1,   3,  5,  7],
+	  *     [10, 11, 16, 20],
+	  *     [23, 30, 34, 50]
+	  *   ]
+	  *   Given target = 3, return true.
+	  * </pre>
+	  * @param matrix
+	  * @param target
+	  * @return
+	  */
+	 public boolean searchMatrix(int[][] matrix, int target) {
+		 if(matrix.length == 0) return false;
+		 //search the right-top(0, matrix[0].length - 1) number at beginning.
+		 int i = 0, j = matrix[0].length - 1;
+		 while(i <= matrix.length - 1 && j >= 0) {
+			 if(matrix[i][j] == target){
+				 return true;
+			 }else if (target > matrix[i][j]) {
+				//find the target along the direction more greater
+				 i ++;
+			 }else{//if (target < matrix[i][j]) 
+				////find the target along the direction more litter
+				 j --;
+			 }
+		 }
+		 //let matrix's size is n*m, i is increasing from 0 to n-1, and j is decreasing from m-1 to 0.
+		 //So, the complex of this  is O(n+m) 
+		 //target is not found
+		 return false;
+	 }
 	 public static void printArray(int []array){
 		 System.out.println(Arrays.toString(array));
 	 }
@@ -1328,7 +1369,7 @@ public class Solution {
 //		 s.climbStairs(10);
 //		System.out.println(s.minimumTotal2(new Integer[][]{{2},{3,4},{6,5,7},{4,1,8,3}}));
 //		System.out.println(s.minimumTotal2(new Integer[][]{{1},{2,3}}));
-//		System.out.println(s.uniquePaths(3, 7));
+		//System.out.println(s.uniquePaths(5, 3));
 		//System.out.println(s.uniquePathsWithObstacles(new int[][]{{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0}}));
 //		System.out.println(s.uniquePathsWithObstacles(new int[][]{{0,0,1,0},{0,0,0,0},{0,0,0,0}}));
 //		System.out.println(s.uniquePathsWithObstacles(new int[][]{{1,0}}));
@@ -1352,7 +1393,7 @@ public class Solution {
 //		dic2.add("a");
 //		
 //		System.out.println(s.wordBreak2("gogoalspecialgospecialgoalsspecial", dic));
-		 System.out.println(s.numDecodings("12"));
+        System.out.println(s.searchMatrix(new int[][]{{1,3,5,7},{10,11,16,20},{23,33,35,50}}, 20));
 
 	}
 
