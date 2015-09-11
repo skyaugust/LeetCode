@@ -7,7 +7,8 @@ Search the solution in
 
 id        | return value  | method name | Question | hint |
 ------------- | ------------- |-------------|----------|------
-39  |boolean   |wordBreak2(String s, Set<String> wordDict)|[Word break](https://leetcode.com/problems/word-break/)|Dp solution
+39  |boolean   |searchMatrix(int[][] matrix, int target) |[Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/)|Young's Matrix. Searching is started from right-top element
+38  |boolean   |wordBreak2(String s, Set<String> wordDict)|[Word break](https://leetcode.com/problems/word-break/)|Dp solution
 38  | boolean  |wordBreak(String s, Set<String> wordDict)|[Word break](https://leetcode.com/problems/word-break/)|Recurse solution with IsBrokenable help
 -   | boolean  | IsBrokenable(String s, Set<String> wordDict) | called by 38-word break
 37  | ListNode |detectCycleII(ListNode head)|[Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/) |locate the intersection point using math trick
