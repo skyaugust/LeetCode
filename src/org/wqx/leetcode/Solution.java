@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeMap;
 
 import javax.xml.stream.events.EndDocument;
@@ -21,6 +22,12 @@ class RandomListNode{
 		this.val = val;
 	}
 }
+class TreeNode {
+     int val;
+     TreeNode left;
+     TreeNode right;
+     TreeNode(int x) { val = x; }
+ }
 class ListNode{
 	int val;
 	ListNode next;
@@ -728,12 +735,17 @@ public class Solution {
 	    }
 	    public int findPeakElement(int nums[]){
 	        int left = 0, right = nums.length - 1;
+	      //left and right move to each other increasingly
 	        while(left<right){
 	            int mid = left + (right - left)>>1;
-	            //mid - 1 and mid + 1 must be legal
-	            if(nums[mid] < nums[mid + 1]) left = mid + 1;
-	            else right = mid;
+	        	
+	            if(nums[mid] < nums[mid + 1]) 
+	            	//left moves to right increasingly
+	            	left = mid + 1;
+	            else//right moves to left increasingly
+	            	right = mid;
 	        }
+	        //At last, when left == right, the nums[right] is a peak element.
 	        return right;
 	    }
 	    public void sortColors(int[] nums) {
@@ -865,7 +877,7 @@ public class Solution {
 	        //    2.1这时，若confidence==0，则说明待判定元素不是待求元素，需要再换
 	        int confidence = 0;
 	        int len = nums.length;
-	        int half = len/3;
+	        int half = len/2;
 	        for(int i = 0;i<len;i++){
 	            if(confidence==0){
 	                r = nums[i];
@@ -1299,7 +1311,222 @@ public class Solution {
 		 //target is not found
 		 return false;
 	 }
+	 /**
+	  * Select sort:
+	  * 	for i in nums[0...n-1]:
+	  * 		minimum index = select minimum number in nums[i...n-1]
+	  * 		swap nums[minimum index] and nums[i]
+	  * 	reture nums
+	  * @param nums
+	  * @return
+	  */
+	 public int [] selectSort(int[] nums){
+		 for (int i = 0; i < nums.length; i++) {
+			int min = nums[i];
+			int min_index = i;
+			for (int j = i; j < nums.length; j++) {	
+				min_index = nums[j] < min ? j : min_index;
+				min = nums[j] < min ? nums[j] : min;
+			}
+			int tmp = nums[i];
+			nums[i] = nums[min_index];
+			nums[min_index] = tmp;
+		}
+		return nums;
+	 }
+	 public int [] sort2(int[] nums){
+		 int sortedcount = 0;
+		 for(int i = 0; i < nums.length - sortedcount; ){
+			 for (int j = i + 1; j < nums.length - sortedcount; j++) {
+				if(nums[j-1] > nums[j]) {
+					int tmp = nums[j];
+					nums[j] = nums[j-1];
+					nums[j-1] = tmp;
+				}
+			}
+			sortedcount ++;
+		 }
+		 return nums;
+	 }
+	 /**
+	  * Bubble sort
+	  * @param nums
+	  * @return
+	  */
+	 public int [] BubbleSort(int[] nums){
+		 
+		 for(int i = 0; i < nums.length; i++){
+	     //Bubble nums.length times
+			 //for each times, check each adjacent pair, exchange the litter one to former
+			 //for the nums.length -i unbubbled elements, there should be nums.length - i - 1 pairs.
+			 for (int j = nums.length - 1; j > i; j--) {
+				if(nums[j] < nums[j-1]) {
+					int tmp = nums[j];
+					nums[j] = nums[j-1];
+					nums[j-1] = tmp;
+				}				
+			}
+		 }
+		 return nums;
+	 }
+	 /**
+	  *Quick Sort 
+	  *
+	  * @param nums
+	  * @param left
+	  * @param right
+	  */
+	 public void quickSort(int[] nums, int left, int right){
+		 if(left < right){
+			 int p = partition2(nums, left, right);
+			 quickSort(nums, left, p-1);
+			 quickSort(nums, p+1, right);
+		 }
+	 }
+	 public int partition2(int []nums, int left, int right){
+		 int base = nums[left];
+		 while(left < right){
+			 System.out.println(left + " " + right);
+			 while(left < right && nums[right] > base) right --;
+			 nums[left] = nums[right];
+			 while(left < right && nums[left] <= base) left ++;
+			 nums[right] = nums[left];
+		 }
+		 nums[left] = base;
+		 return left;
+	 }
+	 /**
+	  * Is string i string t's anagram?
+	  * @param s
+	  * @param t
+	  * @return
+	  */
+	 public boolean isAnagram(String s, String t) {
+	        HashMap<String, Integer> map = new HashMap();
+	        //Increase count of s's char using hashmap
+	        for(char c : s.toCharArray()){
+	            String sc = String.valueOf(c);
+	            if(!map.containsKey(sc)) map.put(sc,1);
+	            else {
+	                int count = map.get(sc);
+	                map.put(sc, count + 1);
+	            }
+	        }
+	        
+	        //Decrease count of t's char using the hashmap before
+	        for(char c : t.toCharArray()){
+	            String sc = String.valueOf(c);
+	            if(!map.containsKey(sc)) map.put(sc,-1);
+	            else {
+	                int count = map.get(sc);
+	                map.put(sc, count - 1);
+	            }
+	        }
+	        
+	        //Check whether there are some positive char's counts
+	        for(String sc : map.keySet()){
+	            if(map.get(sc) != 0) return false;
+	        }
+	        return true;
+	        
+	    }
+	 /**
+	  * Given several numbers, find the max number they can combine
+	  * @param nums
+	  * @return
+	  */
+	    public String largestNumber(int[] nums) {
+	    	//Maybe overflow
+	    	Integer[] tmp = new Integer[nums.length];
+	    	for (int i = 0; i < nums.length; i++) {
+				tmp[i] = nums[i];
+			}
+	    	Arrays.sort(tmp, new Comparator<Integer>() {
+
+				@Override
+				public int compare(Integer o1, Integer o2) {
+					Integer firstInteger = Integer.valueOf(String.valueOf(o1)+String.valueOf(o2));
+					Integer secondInteger = Integer.valueOf(String.valueOf(o2)+String.valueOf(o1)); 
+					if(firstInteger.equals(secondInteger))
+						return 0;
+					else if(firstInteger > secondInteger)
+						return -1;
+					else {
+						return 1;
+					}
+				}
+			});
+	    	printArray(tmp);
+	    	StringBuffer sbBuffer = new StringBuffer();
+	    	for (Integer integer : tmp) {
+				sbBuffer.append(integer.toString());
+			}
+	    	return sbBuffer.toString();
+	    }
+	    public String largestNumber2(int[] nums) {
+	    	//avoid overflow
+	    	String[] tmp = new String[nums.length];
+	    	for (int i = 0; i < nums.length; i++) {
+				tmp[i] = String.valueOf(nums[i]);
+			}
+	    	
+	    	Arrays.sort(tmp, new Comparator<String>() {
+
+				@Override
+				public int compare(String o1, String o2) {
+					String first = o1 + o2;
+					String second = o2 + o1;
+					for (int i = 0; i < first.length(); i++) {
+						if(first.charAt(i)==second.charAt(i)) continue;
+						else if(first.charAt(i) > second.charAt(i)) return -1;
+						else return 1;
+					}
+					return 0;
+					
+				}
+			});
+	    	
+	    	StringBuffer sbBuffer = new StringBuffer();
+	    	for (String s : tmp) {
+				sbBuffer.append(s.toString());
+			}
+	    	if(sbBuffer.length() > 0 && sbBuffer.charAt(0) == '0') return "0"; 
+	    	return sbBuffer.toString();
+	    }
+	    public boolean isAlphanumeric(char c) {
+	    	if((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) return true;
+	    	else return false;
+	    }
+	    /**
+	     * Palindrome problem with some non-alphanumeric char
+	     * @param s
+	     * @return
+	     */
+	    public boolean isPalindrome(String s) {
+	        String tmp = s.toLowerCase();
+	        char [] sc = tmp.toCharArray();
+	        int i = 0;
+	        for(int j = 0; j < sc.length; j++){
+	        	if(isAlphanumeric(sc[j])) sc[i++] = sc[j];
+	        }
+	       // String s1 =String.valueOf(sc).substring(0, i);
+	        
+	        int left = 0, right = i - 1 ;
+	        if(right < 0) return true;
+	        while(left <= right){
+	        	if(sc[left] != sc[right]) return false;
+	        	else{
+	        		left ++;
+	        		right --;
+	        	}
+	        }
+	        return true;
+	        
+	    }
 	 public static void printArray(int []array){
+		 System.out.println(Arrays.toString(array));
+	 }
+	 public static void printArray(Integer []array){
 		 System.out.println(Arrays.toString(array));
 	 }
 	 public static void printArrays(int [][]arrays){
@@ -1309,25 +1536,74 @@ public class Solution {
 	
 		 
 	 }
+	 	/**
+	 	 * Find Tree root's max depth.
+	 	 * @param root
+	 	 * @return
+	 	 */
+	    public int maxDepth(TreeNode root) {
+	        if(root == null) return 0;
+	        else return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+	    }
+	    /**
+	     * Invert a BST, or mirror image reversal a tree
+	     * @param root
+	     * @return
+	     */
+	    public TreeNode invertTree(TreeNode root) {
+	        //Non-recurse
+	        if(root == null) return null;
+	        else{
+	            Stack<TreeNode> stack = new Stack<>();
+	            TreeNode node ,tmp;
+	            stack.push(root);
+	            while(!stack.isEmpty()){
+	                 node = stack.pop();
+	                 tmp = node.left;
+	                 node.left = node.right;
+	                 node.right = tmp;
+	                 if(node.left != null) stack.push(node.left);
+	                 if(node.right !=null) stack.push(node.right);
+	            }
+	            return root;
+	        }
+	    }
+	    /**
+	     * Given nums, put all odd numbers in front of all even numbers
+	     * @param nums
+	     */
+		public static void partitinOddAndEvenNum(int[] nums){
+			int left = 0;
+			int right = nums.length - 1;
+			while(left < right){
+				while(left < right && nums[left] % 2 !=0 ) left ++;
+				while(left < right && nums[right] % 2 ==0 ) right --;
+				int tmp = nums[left];
+				nums[left] = nums[right];
+				nums[right] = tmp;
+			}
+		}
 	 public static void main(String[] args) {
+		 
 		 int[] a = {1};
-		 
-		 
+	
+
 		 Solution s= new Solution();
+		
 ////		 s.rotate(a, 2);
 //		 //System.out.println(s.removeDuplicates(a));
 //		 for(List<Integer> row : s.generate(10))
 //			 System.out.println(row);
 //		 ArrayList<Integer> row = new ArrayList<Integer>(10);
 //		 System.out.println(s.getRow(10));
-		 int [] nums1 = {-1,2,1,-4};
+//		 int [] nums1 = {-1,2,1,-4};
 //		System.out.println(s.threeSumClosest(nums1, 82));
 //		Arrays.sort(nums1);
 
 //		System.out.println(s.threeSumClosest3(nums1, 1));
 //System.out.println(s.threeSum(new int[]{7,-1,14,-12,-8,7,2,-15,8,8,-8,-14,-4,-5,7,9,11,-4,-15,-6,1,-14,4,3,10,-5,2,1,6,11,2,-2,-5,-7,-6,2,-15,11,-6,8,-4,2,1,-1,4,-6,-15,1,5,-15,10,14,9,-8,-6,4,-6,11,12,-15,7,-1,-9,9,-1,0,-4,-1,-12,-2,14,-9,7,0,-3,-4,1,-2,12,14,-10,0,5,14,-1,14,3,8,10,-8,8,-5,-2,6,-11,12,13,-7,-12,8,6,-13,14,-2,-5,-11,1,3,-6}));
 //		 System.out.println(s.findPeakElement(new int[]{1,2,3,4}));
-		 int [] nums = {1,2};
+//		 int [] nums = {1,2};
 //		 s.sortColors(nums);
 //		System.out.println(s.partition(nums, 0, 0));
 //		printArray(nums);
@@ -1393,8 +1669,34 @@ public class Solution {
 //		dic2.add("a");
 //		
 //		System.out.println(s.wordBreak2("gogoalspecialgospecialgoalsspecial", dic));
-        System.out.println(s.searchMatrix(new int[][]{{1,3,5,7},{10,11,16,20},{23,33,35,50}}, 20));
+//        System.out.println(s.searchMatrix(new int[][]{{1,3,5,7},{10,11,16,20},{23,33,35,50}}, 20));
+//        printArray(s.sort2(new int[]{3,6,1,43,7,12,-1,0}));
+//        printArray(s.sort2(new int[]{0,23,-1}));
+//        int[] nums2 = new int[]{3,6,1,43,7,12,-1,0};
+//        s.quickSort(nums2, 0, nums2.length-1);
+//        printArray(nums2);
+//		 System.out.println(s.isAnagram("abcd", "bcada"));
+//		 System.out.println(s.largestNumber2(new int[]{999999998,999999997,999999999}));
+//		 System.out.println(s.largestNumber2(new int[]{12,128}));
+//		 System.out.println(s.largestNumber2(new int[]{0,128}));
+//		 System.out.println(s.largestNumber2(new int[]{0,0}));
+//		 System.out.println(s.isPalindrome(""));
+//		 System.out.println(s.isPalindrome("abccba"));
+//		 System.out.println(s.isPalindrome("a b  c  b   a"));
+//		 System.out.println(s.isPalindrome("1a B  c  b   a1"));
+//		 System.out.println(s.isPalindrome("...."));
+		 int[] nums = {};
+		 s.fun(nums);
+		 printArray(nums);
+		 int aa = 5;
+		 int bb = 10;
+		 System.out.println(aa>>12);
+		 String string = "asd";
+		 HashSet<String> set = new HashSet<>();
+	
+		 
 
+				
 	}
 
 	
